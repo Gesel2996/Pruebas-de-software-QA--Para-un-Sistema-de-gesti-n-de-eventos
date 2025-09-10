@@ -1,0 +1,1810 @@
+{
+	"info": {
+		"_postman_id": "2e9f7d3a-904c-45db-a67e-559aab5281b2",
+		"name": "EMS manual",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45447122",
+		"_collection_link": "https://egochronos-5175342.postman.co/workspace/EgoChronos's-Workspace~c699bfd6-d0af-4098-85b8-264c824ea3df/collection/45447122-2e9f7d3a-904c-45db-a67e-559aab5281b2?action=share&source=collection_link&creator=45447122"
+	},
+	"item": [
+		{
+			"name": "User Registration",
+			"item": [
+				{
+					"name": "Valid Reg",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 (Created)\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response schema is valid\", function () {\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"required\": [\"id\", \"username\", \"email\", \"password\"],\r",
+									"        \"properties\": {\r",
+									"            \"isAdmin\": { \"type\": \"boolean\" },\r",
+									"            \"id\": { \"type\": \"number\" },\r",
+									"            \"username\": { \"type\": \"string\" },\r",
+									"            \"email\": { \"type\": \"string\", \"format\": \"email\" },\r",
+									"            \"password\": { \"type\": \"string\" },\r",
+									"            \"createdAt\": { \"type\": \"string\", \"format\": \"date-time\" },\r",
+									"            \"updatedAt\": { \"type\": \"string\", \"format\": \"date-time\" }\r",
+									"        }\r",
+									"    };\r",
+									"\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//generate a random suffex for username and email\r",
+									"const randomSuffix = Math.floor(Math.random() * 10000);\r",
+									"//add the random suffex to the username and email\r",
+									"const username = `johndoe${randomSuffix}`;\r",
+									"const email = `johndoe${randomSuffix}@email.com`\r",
+									"//set the username and email in the environment variables\r",
+									"pm.environment.set(\"rand_username\", username);\r",
+									"pm.environment.set(\"rand_email\", email);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n  \"username\": \"{{rand_username}}\", \r\n  \"email\": \"{{rand_email}}\", \r\n  \"password\": \"password123\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "existed email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 (Bad Request)\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//generate a random suffex for username and email\r",
+									"const randomSuffix = Math.floor(Math.random() * 10000);\r",
+									"//add the random suffex to the username and email\r",
+									"const username = `johndoe${randomSuffix}`;\r",
+									"const email = `johndoe${randomSuffix}@email.com`\r",
+									"//set the username and email in the environment variables\r",
+									"pm.environment.set(\"rand_username\", username);\r",
+									"pm.environment.set(\"rand_email\", email);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n  \"username\": \"{{rand_username}}\", \r\n  \"email\": \"{{existed_email}}\", \r\n  \"password\": \"password123\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Login",
+			"item": [
+				{
+					"name": "reg User",
+					"item": [
+						{
+							"name": "Valid Reg Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"reg_token\", pm.response.json().token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n  \"email\": \"{{regular_email}}\", \r\n  \"password\": \"{{regular_email_password}}\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid (not reg Email)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.expect(pm.response.text()).to.include('Invalid credentials');"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n  \"email\": \"notReg@email.com\", \r\n  \"password\": \"{{regular_email_password}}\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid (wrong pass)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.expect(pm.response.text()).to.include('Invalid credentials');\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n  \"email\": \"{{regular_email}}\", \r\n  \"password\": \"{{wrongPassword123}}\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "admin User",
+					"item": [
+						{
+							"name": "Valid Admin Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"admin_token\", pm.response.json().token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n  \"email\": \"{{admin_email}}\", \r\n  \"password\": \"{{admin_password}}\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid (wrong pass)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.expect(pm.response.text()).to.include('Invalid credentials');\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n  \"email\": \"{{admin_email}}\", \r\n  \"password\": \"{{wrongPassword123}}\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get All Events",
+					"item": [
+						{
+							"name": "Get All Events (reg)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"//Turn response body from json to javaScript object\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"// Check if the response is an array\r",
+											"pm.expect(response).to.be.an('array');\r",
+											"\r",
+											"//expected object JSON schema\r",
+											"const schema =\r",
+											"{\r",
+											"        \"type\": \"object\",\r",
+											"        \"properties\": {\r",
+											"            \"id\": {\"type\": \"number\"},\r",
+											"            \"name\": {\"type\": \"string\"},\r",
+											"            \"description\": {\"type\": \"string\"},\r",
+											"            \"date\": {\"type\": \"string\"},\r",
+											"            \"createdAt\": {\"type\": \"string\"},\r",
+											"            \"updatedAt\": {\"type\": \"string\"},\r",
+											"            \"rsvped\": {\"type\": \"boolean\"}\r",
+											"            },\r",
+											"            \"required\": [\"id\", \"name\", \"description\", \"date\", \"rsvped\"]\r",
+											"}\r",
+											"if (response.length > 0) {\r",
+											"    // Check if the first element in the array has the expected json schema\r",
+											"    pm.test(\"Response has the expected JSON schema\", function () {\r",
+											"        for (let i = 0; i < response.length; ++i) {\r",
+											"            pm.expect(response[i]).to.have.jsonSchema(schema);\r",
+											"        }\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{reg_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Events (adm)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"//Turn response body from json to javaScript object\r",
+											"const response = pm.response.json();\r",
+											"\r",
+											"// Check if the response is an array\r",
+											"pm.expect(response).to.be.an('array');\r",
+											"\r",
+											"//expected object JSON schema\r",
+											"const schema =\r",
+											"{\r",
+											"        \"type\": \"object\",\r",
+											"        \"properties\": {\r",
+											"            \"id\": {\"type\": \"number\"},\r",
+											"            \"name\": {\"type\": \"string\"},\r",
+											"            \"description\": {\"type\": \"string\"},\r",
+											"            \"date\": {\"type\": \"string\"},\r",
+											"            \"createdAt\": {\"type\": \"string\"},\r",
+											"            \"updatedAt\": {\"type\": \"string\"},\r",
+											"            \"rsvped\": {\"type\": \"boolean\"}\r",
+											"            },\r",
+											"            \"required\": [\"id\", \"name\", \"description\", \"date\", \"rsvped\"]\r",
+											"}\r",
+											"if (response.length > 0) {\r",
+											"    // Check if the first element in the array has the expected json schema\r",
+											"    pm.test(\"Response has the expected JSON schema\", function () {\r",
+											"        for (let i = 0; i < response.length; ++i) {\r",
+											"            pm.expect(response[i]).to.have.jsonSchema(schema);\r",
+											"        }\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create an Event",
+					"item": [
+						{
+							"name": "Create an Event (Admin)",
+							"item": [
+								{
+									"name": "Create an Event (adm)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201 (Created)\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"//json schema\r",
+													"const schema = {\r",
+													"    \"type\": \"object\",\r",
+													"    \"properties\": {\r",
+													"        \"id\": { \"type\": \"number\" },\r",
+													"        \"name\": { \"type\": \"string\" },\r",
+													"        \"description\": { \"type\": \"string\" },\r",
+													"        \"date\": { \"type\": \"string\", \"format\": \"date-time\" },\r",
+													"        \"updatedAt\": { \"type\": \"string\", \"format\": \"date-time\" },\r",
+													"        \"createdAt\": { \"type\": \"string\", \"format\": \"date-time\" }\r",
+													"    },\r",
+													"    \"required\": [\"id\", \"name\", \"description\", \"date\", \"updatedAt\", \"createdAt\"],\r",
+													"    \"additionalProperties\": false\r",
+													"};\r",
+													"\r",
+													"pm.test('Response body has correct JSON schema', function () {\r",
+													"    pm.response.to.have.jsonSchema(schema);\r",
+													"});\r",
+													"\r",
+													"//check if the response body contains the correct data\r",
+													"pm.test('Response body contains correct data', function () {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.name).to.eql(\"Art Exhibition\");\r",
+													"    pm.expect(jsonData.description).to.include(\"contemporary art pieces\");\r",
+													"})\r",
+													"\r",
+													"//save the event id for later use\r",
+													"pm.test('Save event id for later use', function () {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.environment.set(\"created_event_id\", jsonData.id);\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{admin_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \r\n  \"name\": \"Art Exhibition\", \r\n  \"description\": \"An exhibition of contemporary art pieces.\", \r\n  \"date\": \"2025-01-10\" \r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/events",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetEvents(reg)-is created?",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"//Turn response body from json to javaScript object\r",
+													"const response = pm.response.json();\r",
+													"\r",
+													"// Check if the response is an array\r",
+													"pm.expect(response).to.be.an('array');\r",
+													"\r",
+													"//get the object of the array that contains id of created_event_id\r",
+													"const createdEvent = response.find\r",
+													"        (event => event.id === pm.environment.get(\"created_event_id\"));\r",
+													"\r",
+													"// Check if the created event is found and cotains the correct name and secription\r",
+													"pm.expect(createdEvent.name).to.include(\"Art Exhibition\")\r",
+													"pm.expect(createdEvent.description).to.include(\"An exhibition of contemporary art pieces.\")\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Create Event Attempt (reg)",
+							"item": [
+								{
+									"name": "Create an Event (reg)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//status code is 403 (Forbidden)\r",
+													"pm.test('Status code is 403 (Forbidden)', function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"//check that response properity error is \"Access denied.\"\r",
+													"pm.test('Reponse body contains \"Access denied.\"', function () {\r",
+													"    pm.expect(pm.response.text()).to.include('Access denied.');\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \r\n  \"name\": \"Should not be created\", \r\n  \"description\": \"I should not be created\", \r\n  \"date\": \"2025-01-10\" \r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/events",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetEvents(reg)not created?",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"// response to javaScript object\r",
+													"const response = pm.response.json();\r",
+													"\r",
+													"// Check if the response is an array\r",
+													"pm.expect(response).to.be.an('array');\r",
+													"\r",
+													"//if the array is not empty, get the last object in the array\r",
+													"let attemptEvent = response.length > 0 ? response[response.length - 1] : null;\r",
+													"\r",
+													"if (attemptEvent != null) {\r",
+													"// make sure the event is not created\r",
+													"pm.expect(attemptEvent.name).to.not.include(\"Should not be created\");\r",
+													"pm.expect(attemptEvent.description).to.not.include(\"I should not be created\");\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "RSVP to an Event",
+					"item": [
+						{
+							"name": "RSVP as reg",
+							"item": [
+								{
+									"name": "RSVP to an Event",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//set the value of eventId with the created event id\r",
+													"const val = pm.environment.get(\"created_event_id\");\r",
+													"pm.environment.set(\"eventId\", val);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201 (Created)\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"const schema = {\r",
+													"    type: \"object\",\r",
+													"    properties: {\r",
+													"        id: { type: \"number\" },\r",
+													"        user_id: { type: \"number\" },\r",
+													"        event_id: { type: \"string\" },\r",
+													"        updatedAt: { type: \"string\", format: \"date-time\" },\r",
+													"        createdAt: { type: \"string\", format: \"date-time\" }\r",
+													"    },\r",
+													"    required: [\"id\", \"user_id\", \"event_id\"]\r",
+													"};\r",
+													"\r",
+													"pm.test('Response has the correct schema', function() {\r",
+													"    pm.response.to.have.jsonSchema(schema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/events/{{eventId}}/rsvps",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"{{eventId}}",
+												"rsvps"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "RSVP to not avil event",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//set the value of eventId with the created event id\r",
+													"const val = pm.environment.get(\"created_event_id\");\r",
+													"pm.environment.set(\"eventId\", val);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404 (Not Found)\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"const response = pm.response.json();\r",
+													"\r",
+													"// Define the JSON schema to validate against\r",
+													"const schema = {\r",
+													"    \"type\": \"object\",\r",
+													"    \"properties\": {\r",
+													"        \"error\": { \"type\": \"string\" }\r",
+													"    },\r",
+													"    \"required\": [\"error\"]\r",
+													"};\r",
+													"\r",
+													"// Validate the response body against the defined schema\r",
+													"pm.test('Schema is correct', function () {\r",
+													"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+													"});\r",
+													"\r",
+													"pm.test('Error property contains the correct text', function () {\r",
+													"    pm.expect(response.error).to.equal('Event not found.');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/events/7000/rsvps",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"7000",
+												"rsvps"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "RSVP as admin",
+							"item": [
+								{
+									"name": "RSVP to an Event",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//set the value of eventId with the created event id\r",
+													"const val = pm.environment.get(\"created_event_id\");\r",
+													"pm.environment.set(\"eventId\", val);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201 (Created)\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"const schema = {\r",
+													"    type: \"object\",\r",
+													"    properties: {\r",
+													"        id: { type: \"number\" },\r",
+													"        user_id: { type: \"number\" },\r",
+													"        event_id: { type: \"string\" },\r",
+													"        updatedAt: { type: \"string\", format: \"date-time\" },\r",
+													"        createdAt: { type: \"string\", format: \"date-time\" }\r",
+													"    },\r",
+													"    required: [\"id\", \"user_id\", \"event_id\"]\r",
+													"};\r",
+													"\r",
+													"pm.test('Response has the correct schema', function() {\r",
+													"    pm.response.to.have.jsonSchema(schema);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{admin_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/events/{{eventId}}/rsvps",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"{{eventId}}",
+												"rsvps"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "RSVP to not avil event",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//set the value of eventId with the created event id\r",
+													"const val = pm.environment.get(\"created_event_id\");\r",
+													"pm.environment.set(\"eventId\", val);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404 (Not Found)\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"const response = pm.response.json();\r",
+													"\r",
+													"// Define the JSON schema to validate against\r",
+													"const schema = {\r",
+													"    \"type\": \"object\",\r",
+													"    \"properties\": {\r",
+													"        \"error\": { \"type\": \"string\" }\r",
+													"    },\r",
+													"    \"required\": [\"error\"]\r",
+													"};\r",
+													"\r",
+													"// Validate the response body against the defined schema\r",
+													"pm.test('Schema is correct', function () {\r",
+													"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+													"});\r",
+													"\r",
+													"pm.test('Error property contains the correct text', function () {\r",
+													"    pm.expect(response.error).to.equal('Event not found.');\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{admin_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/events/7000/rsvps",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"7000",
+												"rsvps"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get RSVPs for an Event",
+					"item": [
+						{
+							"name": "Get RSVPs (Admin)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function() {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response is JSON\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"let isJson = false;\r",
+											"let jsonData;\r",
+											"try {\r",
+											"    jsonData = pm.response.json();\r",
+											"    isJson = true;\r",
+											"} catch (e) {\r",
+											"    console.log(\"Response is not JSON\");\r",
+											"}\r",
+											"\r",
+											"if (isJson) {\r",
+											"    //make sure the reponse is an array\r",
+											"    pm.test(\"Response is an array\", function() {  \r",
+											"        pm.expect(jsonData).to.be.an('array');\r",
+											"    });\r",
+											"\r",
+											"    //make sure the array is not empty\r",
+											"    pm.test(\"Array is not empty\", function () {\r",
+											"        pm.expect(jsonData).to.have.length.above(0);\r",
+											"    });\r",
+											"\r",
+											"    //make sure each item in the array has the correct json schema\r",
+											"    const RSVP_schema = {\r",
+											"        \"type\": \"object\",\r",
+											"        \"properties\": {\r",
+											"            \"userId\": {\"type\": \"number\"},\r",
+											"            \"username\": {\"type\": \"string\"},\r",
+											"            \"email\": { \"type\": \"string\" }\r",
+											"        },\r",
+											"        \"required\": [\"userId\", \"username\", \"email\"]\r",
+											"    };\r",
+											"\r",
+											"    pm.test(\"Each item in the array has the correct JSON schema\", function () {\r",
+											"        jsonData.forEach(function(item) {\r",
+											"            pm.expect(tv4.validate(item, RSVP_schema)).to.be.true;\r",
+											"        });\r",
+											"    });\r",
+											"}\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events/{{eventId}}/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"{{eventId}}",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get RSVPs (reg)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403 (Forbidden)\", function() {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body contains 'Access denied.'\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('Access denied.');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"response body contains the properity 'error'\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData).to.have.property('error');\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{reg_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events/{{eventId}}/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"{{eventId}}",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete an Event",
+					"item": [
+						{
+							"name": "Delete as reg",
+							"item": [
+								{
+									"name": "Delete Event attempt",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 403 (Forbidden)\", ()=> {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response schema constains the right properties\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property(\"error\");\r",
+													"    pm.expect(response.error).to.equal(\"Access denied.\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events/{{eventId}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"{{eventId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetEvents(reg) not Deleted?",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"// response to javaScript object\r",
+													"const response = pm.response.json();\r",
+													"\r",
+													"// Check if the response is an array\r",
+													"pm.expect(response).to.be.an('array');\r",
+													"\r",
+													"const deletedEventId = pm.environment.get(\"eventId\");\r",
+													"\r",
+													"pm.test(\"Failed to be Deleted event id should be in the response\", () => {\r",
+													"    const found = response.some(event => event.id === deletedEventId);\r",
+													"    pm.expect(found).to.be.true;\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete not avil Event",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 403 (Forbidden)\", ()=> {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response schema constains the right properties\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property(\"error\");\r",
+													"    pm.expect(response.error).to.equal(\"Access denied.\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events/700",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"700"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delete as admin",
+							"item": [
+								{
+									"name": "Delete Event",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200 (OK)\", ()=> {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response schema constains the right properties\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property(\"message\");\r",
+													"    pm.expect(response.message).to.equal(\"Event deleted successfully.\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{admin_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events/{{eventId}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"{{eventId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetEvents(reg) Deleted?",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"// response to javaScript object\r",
+													"const response = pm.response.json();\r",
+													"\r",
+													"// Check if the response is an array\r",
+													"pm.expect(response).to.be.an('array');\r",
+													"\r",
+													"const deletedEventId = pm.environment.get(\"eventId\");\r",
+													"\r",
+													"pm.test(\"Deleted event id should not be in the response\", () => {\r",
+													"    const found = response.some(event => event.id === deletedEventId);\r",
+													"    pm.expect(found).to.be.false;\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{reg_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete not avil Event",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404 (Not Found)\", ()=> {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response schema constains the right properties\", () => {\r",
+													"    const response = pm.response.json();\r",
+													"    pm.expect(response).to.have.property(\"error\");\r",
+													"    pm.expect(response.error).to.equal(\"Event not found.\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{admin_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/events/700",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"events",
+												"700"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get User Profile",
+			"item": [
+				{
+					"name": "Get User Profile (admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK (200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is JSON\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"let isJson = false;\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"    isJson = true;\r",
+									"} catch (error) {\r",
+									"    console.log(\"Response is not JSON\");\r",
+									"}\r",
+									"\r",
+									"const jsonSchema = \r",
+									"{\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\"type\": \"number\" },\r",
+									"        \"username\": { \"type\": \"string\" },\r",
+									"        \"email\": { \"type\": \"string\" },\r",
+									"        \"isAdmin\": { \"type\": \"boolean\" }\r",
+									"    },\r",
+									"    required: [\"id\", \"username\", \"email\", \"isAdmin\"]\r",
+									"}\r",
+									"if (isJson) {\r",
+									"    pm.test(\"Response body is valid JSON schema\", function () {\r",
+									"        pm.expect(jsonData).to.matchSchema(jsonSchema);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/profile ",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"profile "
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile (reg)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is OK (200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is JSON\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"let isJson = false;\r",
+									"let jsonData;\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"    isJson = true;\r",
+									"} catch (error) {\r",
+									"    console.log(\"Response is not JSON\");\r",
+									"}\r",
+									"\r",
+									"const jsonSchema = \r",
+									"{\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\"type\": \"number\" },\r",
+									"        \"username\": { \"type\": \"string\" },\r",
+									"        \"email\": { \"type\": \"string\" },\r",
+									"        \"isAdmin\": { \"type\": \"boolean\" }\r",
+									"    },\r",
+									"    required: [\"id\", \"username\", \"email\", \"isAdmin\"]\r",
+									"}\r",
+									"if (isJson) {\r",
+									"    pm.test(\"Response body is valid JSON schema\", function () {\r",
+									"        pm.expect(jsonData).to.matchSchema(jsonSchema);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{reg_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/profile ",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"profile "
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
