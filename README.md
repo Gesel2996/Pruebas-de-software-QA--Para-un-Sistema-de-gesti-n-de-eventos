@@ -1,40 +1,27 @@
 # Event Management System – Software Testing Project 🎟️ 
-👋 Hello, everyone!
 
-Welcome to the repository for my final project for the Software Testing Diploma at EDGES for Training.
+Este proyecto implica la prueba integral de un sistema de gestión de eventos full-stack. Muestra la aplicación práctica de estrategias y herramientas de prueba en las diferentes capas de la aplicación, desde el frontend hasta el backend.It showcases practical application of testing strategies and tools across different layers of the application, from the frontend to the backend.
 
-📌 Project Overview
-This project involves comprehensive testing of a Full-Stack Event Management System. It showcases practical application of testing strategies and tools across different layers of the application, from the frontend to the backend.
+🔍El objetivo es simular un entorno de control de calidad del mundo real cubriendo pruebas funcionales, de API y de rendimiento.
 
-🔍 The goal is to simulate a real-world QA environment by covering functional, API, and performance testing.
+🧰 Herramientas y tecnologías utilizadas Capa de herramienta/tecnología Propósito 🌐 Frontend (UI) Selenium + JavaScript Pruebas de UI automatizadas 🔌 Capa de API Postman Validación de solicitud/respuesta de API 🚀 Rendimiento JMeter Pruebas de carga y estrés 🗃️ Base de datos SQL
 
-🧰 Tools & Technologies Used
-Layer	Tool/Tech	Purpose 
-🌐 Frontend (UI)	Selenium + JavaScript	Automated UI Testing
-🔌 API Layer	Postman	API Request/Response Validation
-🚀 Performance	JMeter	Load and Stress Testing
-🗃️ Database	SQL
+🧪 Actividades de prueba clave ✅ Automatización de pruebas funcionales de UI
 
-🧪 Key Testing Activities
-✅ UI functional test automation
+🔄 Pruebas de API con parametrización y encadenamiento
 
-🔄 API testing with parameterization and chaining
+📈 Pruebas de rendimiento bajo carga
 
-📈 Performance testing under load
+Pruebas de bases de datos para verificar la consistencia de los datos
 
-🛠️ Database testing for data consistency
+🧾 Documentación del plan de pruebas y casos de prueba
 
-🧾 Test plan and test case documentation
+📊 Entregables del proyecto Plan de pruebas detallado
 
-📊 Project Deliverables
-Detailed Test Plan
+Casos de prueba ejecutables
 
-Executable Test Cases
+Scripts de pruebas de automatización
 
-Automation Test Scripts
+Escenarios de pruebas de rendimiento
 
-Performance Test Scenarios
-
-🏁 Project Status
-🎉 Completed
-All planned testing activities have been successfully implemented, and finalized.
+🏁 Estado del proyecto 🎉 Completado Todas las actividades de prueba planificadas se han implementado y finalizado con éxito.
